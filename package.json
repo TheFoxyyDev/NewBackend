@@ -10,7 +10,8 @@
     "node-cron": "^4.2.1"
   },
   "scripts": {
-    "dev": "ENVIROMENT=dev node --watch src/server.js"
+    "dev": "ENVIROMENT=dev node --watch src/server.js",
+    "start": "ENVIROMENT=prod node src/server.js"
   },
   "type": "commonjs"
 }
