@@ -47,13 +47,13 @@ function chooseSong() {
 }
 
 function getDailySong() {
-    return db.exec(`SELECT url FROM current_song`)
+    return db.prepare(`SELECT url FROM current_song WHERE id = 1`).get()
 }
 
 function refreshDailySong() {
     const chosenSong = chooseSong()
     updateSong(chosenSong.url)
-    db.prepare(`UPDATE current_song SET url = ?`).run(chosenSong.url)
+    db.prepare(`UPDATE current_song SET url = ? WHERE id = 1`).run(chosenSong.url)
 }
 
 module.exports = {
