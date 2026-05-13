@@ -3,10 +3,8 @@ const db = new Database(process.env.SONG_DATABASE_NAME + ".db")
 
 function initDB() {
     db.exec(`
-        CREATE TABLE IF NOT EXISTS daily_songs (
-            url TEXT PRIMARY KEY,
-            last_used TEXT,
-            play_count INTEGER DEFAULT 0
+        CREATE TABLE IF NOT EXISTS current_song (
+            url TEXT PRIMARY KEY
         )
     `)
 }
@@ -49,13 +47,13 @@ function chooseSong() {
 }
 
 function getDailySong() {
-    return db.exec(`SELECT url FROM daily_songs WHERE last_used = 'now'`)
+    return db.exec(`SELECT url FROM current_song`)
 }
 
 function refreshDailySong() {
     const chosenSong = chooseSong()
     updateSong(chosenSong.url)
-    db.prepare(`UPDATE daily_songs SET url = ? WHERE last_used = 'now'`).run(chosenSong.url)
+    db.prepare(`UPDATE current_song SET url = ?`).run(chosenSong.url)
 }
 
 module.exports = {
