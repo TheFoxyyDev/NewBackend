@@ -14,7 +14,7 @@ router.post(`/${prefix}/logout`, auth.logout)
 // ----- Song Guesser -----
 prefix = "sguess"
 router.post(`/${prefix}/search`, sguess.search)
-router.post(`/${prefix}/daily`, sguess.daily)
+router.get(`/${prefix}/daily`, sguess.daily)
 
 // ===========================
 
