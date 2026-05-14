@@ -12,6 +12,13 @@ const base = isDev
 const SEVEN_DAYS = 1000 * 60 * 60 * 24 * 7;
 const TEN_DAYS  = 1000 * 60 * 60 * 24 * 10;
 
+function clearAuthCookies(res) {
+    const opts = { ...base, path: '/' };
+    ['refreshToken', 'accessToken', 'userId', 'username'].forEach(name => {
+        res.clearCookie(name, opts);
+    });
+}
+
 function attachPublicCookie(res, name, value, options = {}) {
     res.cookie(name, value, {
         ...base,
@@ -89,21 +96,15 @@ const register = async (req, res) => {
 const logout = async (req, res) => {
     out.log("Got request on logout")
 
-    const cookies = req.cookies
-    const refreshToken = cookies.refreshToken
-
+    const refreshToken = req.cookies.refreshToken
     const isVerified = jwt.validateRefreshToken(refreshToken)
     if (!isVerified) {
-        return res.status(402).json({ short: "Unauthorized", message: "Invalid authentication token"})
+        return res.status(402).json({ short: "Unauthorized", message: "Invalid authentication token" })
     }
 
-    const userId = jwt.decodeRefreshToken(refreshToken).userId
     await db.invalidateToken(refreshToken)
-    res.clearCookie("refreshToken")
-    res.clearCookie("username")
-    res.clearCookie("accessToken")
-    res.clearCookie("userId")
-    res.status(200).json({ short: "OK", message: "Sucessfully logged out!"})
+    clearAuthCookies(res)
+    res.status(200).json({ short: "OK", message: "Successfully logged out!" })
 }
 
 module.exports = {
