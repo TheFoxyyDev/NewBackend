@@ -17,6 +17,7 @@ app.use(cookieParser())
 app.use(cors({
     origin: [
         "http://localhost:5173",
+        "https://niqbit.com",
         "https://sguess.niqbit.com"
     ],
     credentials: true,
